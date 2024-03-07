@@ -33,7 +33,7 @@ export class EditTransaction extends View<Transaction, TransactionProp> {
     }
     const floatAmont = parseFloat(data.amount);
     if (!!floatAmont === false) {
-      throw error;
+      alert("Amount must be a numeric value!");
     }
     return {
       date: data.date,
@@ -58,35 +58,40 @@ export class EditTransaction extends View<Transaction, TransactionProp> {
         formData[name] = value;
       }
     });
-    console.log(formData);
-    const attrs = this.validTransactionData(formData);
-    this.model.set(attrs);
-    this.model.save();
-    window.location.href = `http://${window.location.host}`;
+    try {
+      const attrs = this.validTransactionData(formData);
+      this.model.set(attrs);
+      this.model.save();
+      window.location.href = `http://${window.location.host}`;
+    } catch {}
   };
 
   templete(): string {
     return `
         <h1>Edit a transaction</h1>
-        <div>
+        <div style="text-align: center;">
+          <a href="/"><button class="btn btn-outline-primary">Back to Transaction list</button></a>
+        </div>
+        <br/>
+        <div class="form-container">
                 <div><label>Date:</label><input type="date" name="date" value="${this.model.get(
                   "date"
                 )}"></div>
                 <div><label>Amount:</label><input type="text" name="amount" value="${this.model.get(
                   "amount"
                 )}"></div>
-                <div><label>Commento:</label><input type="text" name="comment" value="${this.model.get(
+                <div><label>Comment:</label><input type="text" name="comment" value="${this.model.get(
                   "comment"
                 )}"></div>
                 <div><label>Additional data:</label><input type="text" name="data" value="${this.model.get(
                   "data"
                 )}"></div>
                 <div>
-                    <label>Chi?</label>
+                    <label>Who?</label>
                         <select name="user" value="${this.model.get("user")}">
-                            <option value="both">Both</option>
-                            <option value="luca">Luca</option>
-                            <option value="chiara">Chiara</option>
+                            <option value="user1">User1</option>
+                            <option value="user2">User2</option>
+                            <option value="user3">User3</option>
                     </select>
                 </div>
                 <button id="save" class="btn btn-outline-success">Save</button>

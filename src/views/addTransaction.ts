@@ -30,10 +30,12 @@ export class AddTransaction extends SimpleView {
       !!data.comment === false ||
       !!data.user === false
     ) {
+      alert("Date, amount, comment and user are required!");
       throw error;
     }
     const floatAmont = parseFloat(data.amount);
     if (!!floatAmont === false) {
+      alert("Amount must be a numeric value!");
       throw error;
     }
     return {
@@ -62,29 +64,33 @@ export class AddTransaction extends SimpleView {
 
     const events = new Events();
     const syncronization = new Sync<TransactionProp>(`${rootUrl}/transactions`);
-
-    const attrs = this.validTransactionData(formData);
-    const attributes = new Attributes<TransactionProp>(attrs);
-    const transaction = new Transaction(attributes, events, syncronization);
-
-    transaction.save();
-    window.location.href = `http://${window.location.host}`;
+    try {
+      const attrs = this.validTransactionData(formData);
+      const attributes = new Attributes<TransactionProp>(attrs);
+      const transaction = new Transaction(attributes, events, syncronization);
+      transaction.save();
+      window.location.href = `http://${window.location.host}`;
+    } catch {}
   };
 
   templete(): string {
     return `
         <h1>Add a transaction</h1>
-        <div>
-                <div><label>Date:</label><input type="date" name="date"></div>
-                <div><label>Amount:</label><input type="text" name="amount"></div>
-                <div><label>Commento:</label><input type="text" name="comment"></div>
-                <div><label>Additional data:</label><input type="text" name="data"></div>
-                <div>
-                    <label>Chi?</label>
+        <div style="text-align: center;">
+          <a href="/"><button class="btn btn-outline-primary">Back to Transaction list</button></a>
+        </div>
+        <br/>
+        <div class="form-container">
+                <div class="form-group"><label>Date:</label><input type="date" name="date"></div>
+                <div class="form-group"><label>Amount:</label><input type="text" name="amount"></div>
+                <div class="form-group"><label>Comment:</label><input type="text" name="comment"></div>
+                <div class="form-group"><label>Additional data:</label><input type="text" name="data"></div>
+                <div class="form-group">
+                    <label>Who?</label>
                         <select name="user">
-                            <option value="both">Both</option>
-                            <option value="luca">Luca</option>
-                            <option value="chiara">Chiara</option>
+                            <option value="user1">User1</option>
+                            <option value="user2">User2</option>
+                            <option value="user3">User3</option>
                     </select>
                 </div>
                 <button id="save" class="btn btn-outline-success">Save</button>

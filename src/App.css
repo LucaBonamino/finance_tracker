@@ -1,0 +1,21 @@
+body {
+    font-family: 'Courier New', monospace;
+    background-color: #ECFFDC;
+}
+
+#dataTable {
+    text-align: center;
+}
+
+h1{
+    text-align: center;
+}
+
+.form-container {
+    text-align: center;
+  }
+  
+  label {
+    display: inline-block;
+  }
+  

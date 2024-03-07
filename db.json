@@ -1,0 +1,11 @@
+{
+  "transactions": [
+    {
+      "date": "2024-03-15",
+      "amount": 100,
+      "comment": "info",
+      "user": "user2",
+      "id": 1
+    }
+  ]
+}

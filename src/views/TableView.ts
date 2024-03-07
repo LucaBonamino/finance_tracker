@@ -39,7 +39,7 @@ export class TableView extends CollectionView<Transaction, TransactionProp> {
 
   render(): void {
     $(function () {
-      $("#example").DataTable();
+      $("#dataTable").DataTable();
     });
     super.render(); // Call the render method of the parent class first
   }
@@ -51,7 +51,7 @@ export class TableView extends CollectionView<Transaction, TransactionProp> {
     <a href="/add"><button id="save" class="btn btn-outline-success">Add Transaction</button></a>
     </div>
     </br>
-    <table id="example" class="display" style="width:100%">
+    <table id="dataTable" class="table table-striped" style="width:100%">
         <thead>
           <tr>
             <th>Date</th>

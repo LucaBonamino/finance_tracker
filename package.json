@@ -1,19 +1,18 @@
 {
-  "name": "finpool",
+  "name": "finance_tracker",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start:db": "json-server -w db.json",
-    "start:parcel": "parcel index.html --no-cache"
+    "start-db": "json-server -w db.json",
+    "start-parcel": "parcel index.html --no-cache"
   },
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
     "@types/bootstrap": "^5.2.10",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.3",
-    "datatables.net": "^2.0.0",
+    "datatables.net-bs5": "^2.0.0",
     "jquery": "^3.7.1",
     "json-server": "^0.17.4",
     "parcel": "^2.11.0",
@@ -21,17 +20,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/programmingAthlete/FinPool.git"
+    "url": "git+https://github.com/programmingAthlete/finance_tracker.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/programmingAthlete/FinPool/issues"
+    "url": "https://github.com/programmingAthlete/finance_tracker/issues"
   },
-  "homepage": "https://github.com/programmingAthlete/FinPool#readme",
+  "homepage": "https://github.com/programmingAthlete/finance_tracker#readme",
   "devDependencies": {
     "@types/datatables.net": "^1.10.28",
-    "@types/jquery": "^3.5.29"
+    "@types/jquery": "^3.5.29",
+    "buffer": "^6.0.3"
   }
 }
