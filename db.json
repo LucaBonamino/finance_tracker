@@ -1,11 +1,32 @@
 {
   "transactions": [
     {
-      "date": "2024-03-15",
-      "amount": 100,
-      "comment": "info",
-      "user": "user2",
+      "date": "2024-03-07",
+      "amount": 1,
+      "comment": "transaction 1",
+      "user": "user1",
       "id": 1
+    },
+    {
+      "date": "2024-03-08",
+      "amount": 10,
+      "comment": "Transaction 2",
+      "user": "user1",
+      "id": 2
+    },
+    {
+      "date": "2024-03-08",
+      "amount": 1000,
+      "comment": "transaction 3",
+      "user": "user2",
+      "id": 3
+    },
+    {
+      "date": "2024-03-08",
+      "amount": 5000,
+      "comment": "Transaction 4",
+      "user": "user3",
+      "id": 4
     }
   ]
 }

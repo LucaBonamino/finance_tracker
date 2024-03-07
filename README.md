@@ -29,3 +29,5 @@ Run the json server by
 If it is not already present, the file <code>db.json</code> will be created, make sure to create a <em>transactions</em> field in the json file in such way
 
 <code>{"transactions": []}</code>
+
+To show some data at first run, the db.json file in the repo already has 4 dummy transactions, you can delete them from the file or from the app.
