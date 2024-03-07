@@ -14,27 +14,8 @@ const row = new Row(10);
 
 const dataSet = row.generateData();
 
-/* $(function () {
-
-  $("#example").DataTable({
-    data: dataSet,
-    columns: [
-      { title: "Importo" },
-      { title: "Commento" },
-      { title: "Chi" },
-      {
-        title: "",
-        render: function () {
-          return '<button class="btn btn-outline-primary">Edit</button></br><button class="btn btn-outline-danger">Delete</button>';
-        },
-      },
-    ],
-  });
-}); */
-
 const router = new Router();
 
-// Define routes
 router.addRoute("/", () => {
   const transactions = new Transactions(`${rootUrl}/transactions`, (json) =>
     Transaction.buidTransaction(json)
@@ -53,34 +34,6 @@ router.addRoute("/", () => {
     }
   });
   transactions.fetch();
-
-  /* const root = document.getElementById("content");
-  if (root) {
-    const transactions = new Transactions(`${rootUrl}/transactions`, (json) =>
-      Transaction.buidTransaction(json)
-    );
-    const renderTable = () => {
-      const table = new TableView(root, transactions);
-      table.render();
-    };
-
-    transactions.fetch(renderTable); */
-  /*   $(function () {
-    $("#example").DataTable({
-      data: dataSet,
-      columns: [
-        { title: "Importo" },
-        { title: "Commento" },
-        { title: "Chi" },
-        {
-          title: "",
-          render: function () {
-            return '<button class="btn btn-outline-primary">Edit</button></br><button class="btn btn-outline-danger">Delete</button>';
-          },
-        },
-      ],
-    });
-  }); */
 });
 
 router.addRoute("/add", () => {
