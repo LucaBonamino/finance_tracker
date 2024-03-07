@@ -8,12 +8,6 @@ import { Transactions } from "./models/Transactions";
 import { AddTransaction } from "./views/addTransaction";
 import { EditTransaction } from "./views/EditTransaction";
 
-const people: Array<string> = ["Luca", "Chiara", "Both"];
-
-const row = new Row(10);
-
-const dataSet = row.generateData();
-
 const router = new Router();
 
 router.addRoute("/", () => {
