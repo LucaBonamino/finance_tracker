@@ -22,7 +22,6 @@ export class CollectionModel<T, K> {
         this.models.push(this.deserialize(value));
       });
       this.trigger("change");
-      console.log(this);
       if (callback) {
         callback();
       }

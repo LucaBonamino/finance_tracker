@@ -16,7 +16,6 @@ router.addRoute("/", () => {
   );
   transactions.on("change", () => {
     const root = document.getElementById("content");
-    console.log("triggered");
     if (root) {
       const table = new TableView(root, transactions);
       table.render();
@@ -48,7 +47,6 @@ router.addRoute("/edit/{transaction_id}", (params) => {
         const root = document.getElementById("content");
         if (root) {
           const transaction = Transaction.buidTransaction(result);
-          console.log(transaction);
           const view = new EditTransaction(root, transaction);
           view.render();
         }
@@ -57,8 +55,6 @@ router.addRoute("/edit/{transaction_id}", (params) => {
     .catch((error) => {
       throw error;
     });
-
-  // Use transaction_id to fetch specific transaction data or render an edit view
 });
 
 router.navigate(window.location.href);

@@ -17,10 +17,8 @@ export class TableView extends CollectionView<Transaction, TransactionProp> {
       const model = this.collection.models[index];
       model.delete();
       this.collection.models.splice(index, 1);
-      console.log(this.collection);
       this.render();
     } else {
-      console.log("Do nothing");
     }
   };
 
@@ -33,7 +31,6 @@ export class TableView extends CollectionView<Transaction, TransactionProp> {
         "id"
       )}`;
     } else {
-      console.log("Do nothing");
     }
   };
 
