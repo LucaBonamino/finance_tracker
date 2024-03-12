@@ -61,10 +61,9 @@ export class EditTransaction extends View<Transaction, TransactionProp> {
     try {
       const attrs = this.validTransactionData(formData);
       this.model.set(attrs);
-      this.model.save();
-      setTimeout(() => {
-        window.location.href = `http://${window.location.host}`;
-      }, 500);
+      this.model.save(
+        () => (window.location.href = `http://${window.location.host}`)
+      );
     } catch {}
   };
 

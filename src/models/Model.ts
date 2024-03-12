@@ -70,11 +70,16 @@ export class Model<T extends OwnsId> {
     }
   }
 
-  save(): void {
+  save(callback?: () => void): void {
     console.log("save");
     this.syncronization
       .save(this.attributes.getAll())
-      .then((response: AxiosResponse) => this.events.trigger("save"))
+      .then((response: AxiosResponse) => {
+        if (callback !== undefined) {
+          callback();
+        }
+        this.events.trigger("save");
+      })
       .catch(() => {
         this.events.trigger("error");
       });

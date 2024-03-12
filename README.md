@@ -33,8 +33,3 @@ If it is not already present, the file <code>db.json</code> will be created, mak
 To show some data at first run, the db.json file in the repo already has 4 dummy transactions, you can delete them from the file or from the app.
 
 In the <code>Config.ts</code>, you can set the url of the backend server if your server is not in localhost.
-
-## Issues
-
-When using a browser different than Chrome, when saving [resp: editing] a transaction, it semes that the user is re-directed to the root page before the POST [resp: PUT] request is able to event be sent to the back-end server.
-This problem is solved by delaying the re-direction by 500 milliseconds. This is NOT the correct solution, but it is the approach that I have found at the moment without changing the <code>save</code> mehod.
