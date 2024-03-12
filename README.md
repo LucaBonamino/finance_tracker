@@ -31,3 +31,5 @@ If it is not already present, the file <code>db.json</code> will be created, mak
 <code>{"transactions": []}</code>
 
 To show some data at first run, the db.json file in the repo already has 4 dummy transactions, you can delete them from the file or from the app.
+
+In the <code>Config.ts</code>, you can set the url of the backend server if your server is not in localhost.
