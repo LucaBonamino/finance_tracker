@@ -69,7 +69,9 @@ export class AddTransaction extends SimpleView {
       const attributes = new Attributes<TransactionProp>(attrs);
       const transaction = new Transaction(attributes, events, syncronization);
       transaction.save();
-      window.location.href = `http://${window.location.host}`;
+      setTimeout(() => {
+        window.location.href = `http://${window.location.host}`;
+      }, 500);
     } catch {}
   };
 
