@@ -71,7 +71,11 @@ export class AggragatedTransactions extends CollectionView<
     return `
     <h1>Aggragated View</h1>
     <div>
-    <a href="/add"><button id="save" class="btn btn-outline-success">Add Transaction</button></a>
+        <a href="/"><button class="btn btn-outline-primary">Back to Transaction list</button></a>
+    </div>
+    <br/>
+    <div>
+      <a href="/add"><button id="save" class="btn btn-outline-success">Add Transaction</button></a>
     </div>
     </br>
     <div>
