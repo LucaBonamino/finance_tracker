@@ -46,6 +46,7 @@ export class TableView extends CollectionView<Transaction, TransactionProp> {
     <h1>All Transactions</h1>
     <div>
     <a href="/add"><button id="save" class="btn btn-outline-success">Add Transaction</button></a>
+    <a href="/aggregated"><button class="btn btn-outline-primary">Aggragated View</button></a>
     </div>
     </br>
     <table id="dataTable" class="table table-striped" style="width:100%">

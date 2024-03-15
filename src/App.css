@@ -19,3 +19,18 @@ h1{
     display: inline-block;
   }
   
+  .show {
+    background-color: #ECFFDC; /* Blue background */
+    border: none; /* Remove border */
+    color: white; /* White text */
+    padding: 10px 20px; /* Padding */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Add cursor pointer */
+    border-radius: 5px; /* Add border radius */
+    transition: background-color 0.3s; /* Smooth background color transition */
+}
+
+.show:hover {
+    background-color: #ECFFDC;
+    color: black;
+}

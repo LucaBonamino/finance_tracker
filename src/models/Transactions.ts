@@ -26,4 +26,52 @@ export class Transactions extends CollectionModel<
   bindModel(data: Transaction[]): void {
     this.models = data;
   }
+
+  static calculateCumulatedAmount(
+    transactions: { transaction: Transaction; index: number }[]
+  ): number {
+    return transactions.reduce(
+      (sum, transactionObj) => sum + transactionObj.transaction.get("amount"),
+      0
+    );
+  }
+
+  static aggragateTransactionObj(collection: Transaction[]) {
+    const aggregatedData: {
+      [monthYear: string]: { transaction: Transaction; index: number }[];
+    } = {};
+
+    collection.forEach((model, index) => {
+      const [year, month] = model.get("date").split("-");
+      const monthYear = `${year}-${month}`;
+
+      if (!aggregatedData[monthYear]) {
+        aggregatedData[monthYear] = [];
+      }
+
+      aggregatedData[monthYear].push({ transaction: model, index: index });
+    });
+
+    return aggregatedData;
+  }
+
+  static formatDate(monthYearString) {
+    const [year, month] = monthYearString.split("-");
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    const formattedMonth = monthNames[parseInt(month) - 1];
+    return `${formattedMonth} ${year}`;
+  }
 }

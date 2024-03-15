@@ -6,6 +6,7 @@ import { TableView } from "./views/TableView";
 import { Transactions } from "./models/Transactions";
 import { AddTransaction } from "./views/addTransaction";
 import { EditTransaction } from "./views/EditTransaction";
+import { AggragatedTransactions } from "./views/AggragatedTransactions";
 
 document.addEventListener("DOMContentLoaded", function () {
   const router = new Router();
@@ -35,6 +36,26 @@ document.addEventListener("DOMContentLoaded", function () {
       const addView = new AddTransaction(root);
       addView.render();
     }
+  });
+
+  router.addRoute("/aggregated", () => {
+    const transactions = new Transactions(`${rootUrl}/transactions`, (json) =>
+      Transaction.buidTransaction(json)
+    );
+    transactions.on("change", () => {
+      const root = document.getElementById("content");
+      console.log("triggered");
+      if (root) {
+        const table = new AggragatedTransactions(root, transactions);
+        table.render();
+      } else {
+        const contentDiv = document.getElementById("content");
+        if (contentDiv) {
+          contentDiv.innerHTML = "<p>This is the home page.</p>";
+        }
+      }
+    });
+    transactions.fetch();
   });
 
   router.addRoute("/edit/{transaction_id}", (params) => {
