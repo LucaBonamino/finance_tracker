@@ -16,8 +16,8 @@ export class CollectionModel<T, K> {
     return this.events.trigger;
   }
 
-  fetch(callback?: () => void): void {
-    axios.get(this.url).then((response: AxiosResponse) => {
+  fetch(callback?: () => void, queryParams: string = ""): void {
+    axios.get(`${this.url}${queryParams}`).then((response: AxiosResponse) => {
       response.data.forEach((value: K) => {
         this.models.push(this.deserialize(value));
       });

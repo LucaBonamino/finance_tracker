@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
     });
-    transactions.fetch();
+    transactions.fetch(undefined, "?_sort=date&_order=desc");
   });
 
   router.addRoute("/edit/{transaction_id}", (params) => {

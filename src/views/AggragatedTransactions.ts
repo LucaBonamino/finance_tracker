@@ -51,7 +51,7 @@ export class AggragatedTransactions extends CollectionView<
           table.style.display = "";
           $(function () {
             $(`#dataTableMount${index}`).DataTable().destroy();
-            $(`#dataTableMount${index}`).DataTable();
+            $(`#dataTableMount${index}`).DataTable({ order: [[0, "desc"]] });
           });
         } else {
           table.style.display = "none";
@@ -71,11 +71,8 @@ export class AggragatedTransactions extends CollectionView<
     return `
     <h1>Aggragated View</h1>
     <div>
-        <a href="/"><button class="btn btn-outline-primary">Back to Transaction list</button></a>
-    </div>
-    <br/>
-    <div>
       <a href="/add"><button id="save" class="btn btn-outline-success">Add Transaction</button></a>
+      <a href="/"><button id="save" class="btn btn-outline-primary">Back to all transaction</button></a>
     </div>
     </br>
     <div>
@@ -83,11 +80,13 @@ export class AggragatedTransactions extends CollectionView<
           .map(
             ([month, transactions]) => `
               <div>
-                <p>${month} - ${Transactions.formatDate(
+              <div class="border rounded mb-3 d-inline-block">
+              <button class="show" data-id="${month}">${month} - ${Transactions.formatDate(
               month
             )} - Total ${Transactions.calculateCumulatedAmount(
               transactions
-            )}<button class="show" data-id="${month}">></button></p>
+            )} ></button>
+            </div>
                 <table id="dataTableMount${month}" class="table table-striped hidden" style="width:100%;text-align:center;display: none;">
                 <thead>
                   <tr>

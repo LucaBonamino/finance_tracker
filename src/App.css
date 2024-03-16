@@ -13,24 +13,22 @@ h1{
 
 .form-container {
     text-align: center;
-  }
+}
   
-  label {
+label {
     display: inline-block;
-  }
+}
   
-  .show {
-    background-color: #ECFFDC; /* Blue background */
-    border: none; /* Remove border */
-    color: white; /* White text */
-    padding: 10px 20px; /* Padding */
-    font-size: 16px; /* Font size */
-    cursor: pointer; /* Add cursor pointer */
-    border-radius: 5px; /* Add border radius */
-    transition: background-color 0.3s; /* Smooth background color transition */
+.show {
+    background-color: #ECFFDC;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    border-color: green;
 }
 
 .show:hover {
-    background-color: #ECFFDC;
-    color: black;
+    background-color: lightblue;
+    border-color: blue;
 }
