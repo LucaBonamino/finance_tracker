@@ -1,3 +1,4 @@
+PROJECT_NAME = finance_tracker
 
 SHELL_DOT = $(shell printf "\033[34;1m▶\033[0m")
 
