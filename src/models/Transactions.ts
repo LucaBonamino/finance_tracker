@@ -30,10 +30,11 @@ export class Transactions extends CollectionModel<
   static calculateCumulatedAmount(
     transactions: { transaction: Transaction; index: number }[]
   ): number {
-    return transactions.reduce(
+    const total = transactions.reduce(
       (sum, transactionObj) => sum + transactionObj.transaction.get("amount"),
       0
     );
+    return Math.round((total + Number.EPSILON) * 100) / 100;
   }
 
   static aggragateTransactionObj(collection: Transaction[]) {
