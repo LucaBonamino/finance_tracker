@@ -85,7 +85,7 @@ export class AggragatedTransactions extends CollectionView<
               month
             )} - Total ${Transactions.calculateCumulatedAmount(
               transactions
-            )} ></button>
+            )} (${transactions.length}) ></button>
             </div>
                 <table id="dataTableMount${month}" class="table table-striped hidden" style="width:100%;text-align:center;display: none;">
                 <thead>
