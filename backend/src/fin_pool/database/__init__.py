@@ -1,1 +1,0 @@
-from fin_pool.database.models import *
