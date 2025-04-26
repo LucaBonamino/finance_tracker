@@ -14,10 +14,6 @@ Ideal to be used in a local network in the family. No log in is needed.
 
 <b>Note</b>: the processing of the data (i.e. aggregation of the transactions and simple statistics) are done in the front end. This is done to support point 2 in the "Next feature" section without having to use FHE.
 
-## Future features
-1. Add API authentication on the backend and login in the front end.
-2. Add secret-key encryption on the front end. The back will not be able to decrypt the data.
-
 ## Setup
 
 Install the packages by
