@@ -12,8 +12,6 @@ Ideal to be used in a local network in the family. No log in is needed.
 4. Insert new transactions and update existing transactions.
 5. Insert transaction by importing json, CSV or Excel files.
 
-<b>Note</b>: the processing of the data (i.e. aggregation of the transactions and simple statistics) are done in the front end. This is done to support point 2 in the "Next feature" section without having to use FHE.
-
 ## Setup
 
 Install the packages by
