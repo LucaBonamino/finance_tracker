@@ -1,79 +1,27 @@
 import csv
 import datetime
-from decimal import Decimal
 from pathlib import Path
-from typing import List, Optional, TypeVar, Generic
+from typing import Optional
 
 import orjson
 import pydantic
-from fastapi import FastAPI, UploadFile, File, HTTPException
-from pydantic import RootModel, BaseModel
+from fastapi import FastAPI, UploadFile, File, HTTPException, Body
 from sqlalchemy import and_
 from fastapi.middleware.cors import CORSMiddleware
 
 from fin_pool.database.db_engine import get_new_session
 from fin_pool.database.models import User, Transaction as DBTransaction, TransactionCategory as DBTransactionCategory, \
-    TransactionType as DBTransactionType, Account
-
-
-class TransactionType(pydantic.BaseModel):
-    id: int
-    type: str
-
-
-class TransactionTypes(RootModel[List[TransactionType]]):
-    pass
-
-
-class TransactionCategory(pydantic.BaseModel):
-    id: int
-    category: str
-
-
-class TransactionCategories(RootModel[List[TransactionCategory]]):
-    pass
-
-
-class AccountOwner(pydantic.BaseModel):
-    id: int
-    account_owner: str
-
-
-class AccountOwners(RootModel[List[AccountOwner]]):
-    pass
-
-
-T = TypeVar("T", int, None)
-
-
-class Transaction(BaseModel, Generic[T]):
-    id: T = None
-    quantity: Decimal
-    date: datetime.date
-    type: Optional[str] = None
-    account_owner: str
-    category: Optional[str] = None
-
-
-class Transactions(RootModel[List[Transaction[T]]], Generic[T]):
-    pass
-
-
-class LogInRequest(pydantic.BaseModel):
-    email: str
-    password: str
-
-
-class Token(pydantic.BaseModel):
-    token: str
-    expiring: str
-
+    TransactionType as DBTransactionType, Account, TransactionCategory, TransactionType
+from fin_pool.entities import Transactions, Transaction, Token, LogInRequest, TransactionCategories, TransactionTypes, \
+    AccountOwners
+from fin_pool.service import AppService
 
 app = FastAPI()
 
+
 origins = [
     "http://localhost:1234",
-    "http://127.0.0.1:1234",
+    "http://127.0.0.1:1234"
 ]
 
 app.add_middleware(
@@ -85,37 +33,160 @@ app.add_middleware(
 )
 
 
+# TODO: HTTP Error handling via a custom error handling function
+
+# TODO: Correct error handling inside of each Fast API paths
+
+# TODO: Re-order code inside Fast API paths into services and utils
+
+# TODO: Attach session to DBEngine
+
 @app.get("/transactions", status_code=200, response_model=Transactions)
 def get_transactions() -> Transactions:
-    with get_new_session() as session:
-        transactions = session.query(DBTransaction).all()
-        t_out = [
-            Transaction[int](
-                id=item.id,
-                quantity=item.quantity,
-                date=item.date,
-                account_owner=item.account.account_owner,
-                type=item.transaction_type.type if item.transaction_type is not None else None,
-                category=item.transaction_type.category.category if item.transaction_type is not None and item.transaction_type.category is not None else None
-            )
-            for item in transactions
-        ]
-
-    return Transactions[int](t_out)
+    return AppService.get_transactions()
 
 
 @app.get("/transactions/{transaction_id}", status_code=200, response_model=Transaction)
 def get_transactions(transaction_id: int) -> Transaction[int]:
-    with get_new_session() as session:
-        transaction = session.query(DBTransaction).filter(DBTransaction.id == transaction_id).one_or_none()
-        return Transaction[int](
-            id=transaction.id,
-            quantity=transaction.quantity,
-            date=transaction.date,
-            account_owner=transaction.account.account_owner,
-            type=transaction.transaction_type.type if transaction.transaction_type else None,
-            category=transaction.transaction_type.category.category if transaction.transaction_type is not None and transaction.transaction_type.category is not None else None
+    return AppService.get_transaction(transaction_id)
+
+
+@app.post("/transactions", status_code=201)
+def add_transaction(request_model: Transaction = Body(...)):
+    session = get_new_session()
+    try:
+        if request_model.account_owner is not None:
+            account = session.query(Account).filter(Account.account_owner == request_model.account_owner).one_or_none()
+            if account is None:
+                account = Account(get_account_owner=request_model.account_owner)
+                session.add(account)
+                session.flush()
+                account_id = account.id
+            else:
+                account_id = account.id
+        else:
+            account_id = None
+
+        # Transaction category
+        if request_model.category is not None:
+            category = session.query(DBTransactionCategory).filter(
+                DBTransactionCategory.category == request_model.category).one_or_none()
+            if category is None:
+                category = DBTransactionCategory(category=request_model.category)
+                session.add(category)
+                session.flush()
+                category_id = category.id
+            else:
+                category_id = category.id
+        else:
+            category_id = None
+
+        # Transaction type
+        if request_model.type is not None:
+            transaction_type = session.query(DBTransactionType).filter(
+                DBTransactionType.type == request_model.type).one_or_none()
+            if transaction_type is None:
+                transaction_type = DBTransactionType(type=request_model.type, category_id=category_id)
+                session.add(transaction_type)
+                session.flush()
+                type_id = transaction_type.id
+            else:
+                type_id = transaction_type.id
+        else:
+            type_id = None
+
+        transaction = DBTransaction(
+            date=request_model.date,
+            quantity=request_model.quantity,
+            transaction_type_id=type_id,
+            account_id=account_id
         )
+        session.add(transaction)
+        session.commit()
+
+    except Exception as exc:
+        session.rollback()
+        raise HTTPException(status_code=500, detail=exc)
+    finally:
+        session.close()
+
+@app.delete("/transactions/{transaction_id}", status_code=204)
+def delete_transaction(transaction_id: int):
+    session = get_new_session()
+    try:
+        transaction = session.query(DBTransaction).filter(DBTransaction.id == transaction_id).one_or_none()
+        if transaction is None:
+            raise HTTPException(status_code=404)
+        session.add(transaction)
+        session.delete(transaction)
+        session.commit()
+    except Exception as exc:
+        session.rollback()
+        raise exc
+    finally:
+        session.close()
+
+@app.put("/transactions/{transaction_id}", status_code=204)
+def update_transaction(transaction_id: int, request_model: Transaction = Body(...)):
+    session = get_new_session()
+    try:
+        transaction = session.query(DBTransaction).filter(DBTransaction.id == transaction_id).one_or_none()
+        if transaction is None:
+            raise HTTPException(status_code=404)
+
+        if request_model.account_owner is not None:
+            account = session.query(Account).filter(Account.account_owner == request_model.account_owner).one_or_none()
+            if account is None:
+                account = Account(get_account_owner=request_model.account_owner)
+                session.add(account)
+                session.flush()
+                account_id = account.id
+            else:
+                account_id = account.id
+        else:
+            account_id = None
+
+        # Transaction category
+        if request_model.category is not None:
+            category = session.query(DBTransactionCategory).filter(
+                DBTransactionCategory.category == request_model.category).one_or_none()
+            if category is None:
+                category = DBTransactionCategory(category=request_model.category)
+                session.add(category)
+                session.flush()
+                category_id = category.id
+            else:
+                category_id = category.id
+        else:
+            category_id = None
+
+        # Transaction type
+        if request_model.type is not None:
+            transaction_type = session.query(DBTransactionType).filter(
+                DBTransactionType.type == request_model.type).one_or_none()
+            if transaction_type is None:
+                transaction_type = DBTransactionType(type=request_model.type, category_id=category_id)
+                session.add(transaction_type)
+                session.flush()
+                type_id = transaction_type.id
+            else:
+                type_id = transaction_type.id
+        else:
+            type_id = None
+
+        transaction.date = request_model.date
+        transaction.quantity = request_model.quantity
+        transaction.transaction_type_id = type_id
+        transaction.category_id = category_id
+        transaction.account_id = account_id
+        session.add(transaction)
+        session.commit()
+
+    except Exception as exc:
+        session.rollback()
+        raise HTTPException(status_code=500, detail=exc)
+    finally:
+        session.close()
 
 
 @app.post("/login", status_code=200, response_model=Token)
@@ -156,10 +227,11 @@ def export_in_csv():
         with open('transactions.csv', 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
 
+            # Optionally, write a header row
             writer.writerow(['Date', 'Amount', "Expenses_id", 'Expense Type', "category_id", 'Category'])
 
             for row in t:
-
+                # Convert the first element (a date) to a string in ISO format
                 if isinstance(row[0], datetime.date):
                     row[0] = row[0].isoformat()
                 writer.writerow(row)
@@ -190,7 +262,7 @@ def get_account_owners():
             {"id": item.id, "account_owner": item.account_owner} for item in account_owners
         ])
 
-
+# TODO: Generalize file upload to CSV and Excel files
 @app.post("/upload", status_code=201)
 async def upload_file(file: UploadFile = File(...)):
     file_name = Path(file.filename)

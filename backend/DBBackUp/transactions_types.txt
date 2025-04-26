@@ -1,0 +1,14 @@
+id|type                          |category_id|
+--+------------------------------+-----------+
+ 1|rent                          |          1|
+ 2|food                          |          1|
+ 3|PayPall                       |          1|
+ 4|unknown - BELAIR DISTRIB 02.03|          1|
+ 5|Medical                       |          2|
+ 6|glosseries                    |          1|
+ 7|tenue-compte                  |          1|
+ 8|Occasional food               |          2|
+ 9|SAINTE IRINE                  |           |
+10|Caisse-Medico                 |          1|
+11|electricity                   |          1|
+12|parking                       |          2|

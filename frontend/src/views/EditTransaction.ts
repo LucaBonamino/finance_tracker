@@ -144,6 +144,7 @@ export class EditTransaction extends View<Transaction, TransactionProp> {
       }
     });
     const attrs = this.validTransactionData(formData);
+    console.log(attrs);
     this.model.set(attrs);
     this.model.save(
       () => (window.location.href = `http://${window.location.host}`)
@@ -223,7 +224,7 @@ export class EditTransaction extends View<Transaction, TransactionProp> {
           <a href="/"><button class="btn btn-outline-primary">Back to Transaction list</button></a>
         </div>
 	      <br/>
-	      <div>
+	      <div  class="form-container">
         <div>
           <label>Date:</label><input type="date" name="date" value="${this.model.get(
             "date"

@@ -139,8 +139,8 @@ export class AddTransaction extends SimpleView {
       quantity: floatAmount,
       comment: data.comment!,
       account_owner: data.account_owner!,
-      type: data.type,
-      category: data.category,
+      type: data.type!,
+      category: data.category!,
     };
   }
 
@@ -166,7 +166,9 @@ export class AddTransaction extends SimpleView {
     );
 
     try {
+      console.log(formData);
       const validData = this.validTransactionData(formData);
+      console.log(validData);
       const attributes = new Attributes<TransactionProp>(validData);
       const transaction = new Transaction(attributes, events, synchronization);
 
@@ -223,7 +225,7 @@ export class AddTransaction extends SimpleView {
 	<br/>
 	<div class="form-container">
                 <div><label class="form-label">Date:</label><input type="date" name="date"></div>
-                <div><label class="form-label">Amount:</label><input type="text" name="amount"></div>
+                <div><label class="form-label">Amount:</label><input type="text" name="quantity"></div>
                 <div>
                   <label class="form-label">Type:</label>
                   <select name="type">
@@ -244,7 +246,7 @@ export class AddTransaction extends SimpleView {
                 <div><label class="form-label">Additional data:</label><input type="text" name="data"></div>
                 <div>
                     <label>Account owner</label>
-                        <select name="accountOwner">
+                        <select name="account_owner">
                           ${accountOwnerOptions}
                           ${otherAccountOwnerOption}
                     </select>

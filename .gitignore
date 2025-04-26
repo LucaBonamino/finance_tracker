@@ -8,3 +8,20 @@ db.json
 **__pycache__**
 backend/.env
 
+# Back end
+.idea
+.python-version
+backend/my_database.db
+backend/**__pycache__
+backend/src/fin_pool.egg-info
+backend/.env
+
+
+# Front end
+frontend/node_modules
+frontend/.parcel-cache
+frontend/package-lock.json
+frontend/dist
+frontend/db.json
+frontend/logs/**
+frontend/dbBackups/**
