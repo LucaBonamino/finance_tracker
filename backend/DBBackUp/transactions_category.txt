@@ -1,4 +1,0 @@
-id|category          |
---+------------------+
- 1|fixed-expenses    |
- 2|variables-expenses|
