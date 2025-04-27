@@ -102,7 +102,7 @@ export class EditTransaction extends View<Transaction, TransactionProp> {
     return {
       "click:#save": this.onSave,
       "change:select[name='type']": this.onTypeChange,
-      "change:select[name='accountOwner']": this.onTypeChange,
+      "change:select[name='account_owner']": this.onTypeChange,
     };
   }
 
@@ -143,6 +143,18 @@ export class EditTransaction extends View<Transaction, TransactionProp> {
         formData[name] = value;
       }
     });
+    if (formData["type"] === "other" && formData["otherType"]) {
+      formData["type"] = formData["otherType"];
+    }
+
+    if (formData["account_owner"] === "other" && formData["otherAccountName"]) {
+      formData["account_owner"] = formData["otherAccountName"];
+    }
+
+    // You can also delete 'otherType' if you want clean data:
+    delete formData["otherType"];
+    delete formData["otherAccountName"];
+
     const attrs = this.validTransactionData(formData);
     console.log(attrs);
     this.model.set(attrs);
@@ -155,9 +167,11 @@ export class EditTransaction extends View<Transaction, TransactionProp> {
     const select = event.target as HTMLSelectElement;
     const name = select.getAttribute("name");
     if (name === "type") {
+      this.currentSelection = select.value;
       this.showOther = select.value === "other";
     }
-    if (name === "accountOwner") {
+    if (name === "account_owner") {
+      this.currentSelectedAccount = select.value;
       this.showOtherAccountOwner = select.value === "other";
     }
     this.render();
@@ -268,7 +282,7 @@ export class EditTransaction extends View<Transaction, TransactionProp> {
                 </div>
                 <div>
                     <label>Account owner</label>
-                        <select name="accountOwner">
+                        <select name="account_owner">
                           ${accountOwnerOptions}
                           ${otherAccountOwnerOption}
                     </select>
@@ -278,7 +292,7 @@ export class EditTransaction extends View<Transaction, TransactionProp> {
                     ? `
               <div id="otherTypeContainer" style="margin-top:8px;">
                 <label>Specify other:</label>
-                  <input type="text" id="otherType" name="otherType" value="${
+                  <input type="text" id="otherType" name="otherAccountName" value="${
                     this.model.get("account_owner") || ""
                   }" placeholder="Enter new account owner">
               </div>
