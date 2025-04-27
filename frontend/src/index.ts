@@ -14,8 +14,6 @@ const people: Array<string> = ["Luca", "Chiara", "Both"];
 document.addEventListener("DOMContentLoaded", function () {
   const router = new Router();
 
-  console.log(rootUrl);
-
   // Define routes
   router.addRoute("/", () => {
     const transactions = new Transactions(`${rootUrl}/transactions`, (json) =>
@@ -23,7 +21,6 @@ document.addEventListener("DOMContentLoaded", function () {
     );
     transactions.on("change", () => {
       const root = document.getElementById("content");
-      console.log("triggered");
       if (root) {
         const table = new TableView(root, transactions);
         table.render();
@@ -74,7 +71,6 @@ document.addEventListener("DOMContentLoaded", function () {
           const root = document.getElementById("content");
           if (root) {
             const transaction = Transaction.buidTransaction(result);
-            console.log(transaction);
             const view = new EditTransaction(root, transaction);
             view.render();
           }

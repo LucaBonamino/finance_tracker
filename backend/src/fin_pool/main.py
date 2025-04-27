@@ -58,7 +58,7 @@ def add_transaction(request_model: Transaction = Body(...)):
         if request_model.account_owner is not None:
             account = session.query(Account).filter(Account.account_owner == request_model.account_owner).one_or_none()
             if account is None:
-                account = Account(get_account_owner=request_model.account_owner)
+                account = Account(account_owner=request_model.account_owner)
                 session.add(account)
                 session.flush()
                 account_id = account.id
@@ -137,7 +137,7 @@ def update_transaction(transaction_id: int, request_model: Transaction = Body(..
         if request_model.account_owner is not None:
             account = session.query(Account).filter(Account.account_owner == request_model.account_owner).one_or_none()
             if account is None:
-                account = Account(get_account_owner=request_model.account_owner)
+                account = Account(account_owner=request_model.account_owner)
                 session.add(account)
                 session.flush()
                 account_id = account.id
@@ -265,6 +265,7 @@ def get_account_owners():
 # TODO: Generalize file upload to CSV and Excel files
 @app.post("/upload", status_code=201)
 async def upload_file(file: UploadFile = File(...)):
+
     file_name = Path(file.filename)
     ext = file_name.suffix.split('.')[1]
 
@@ -277,6 +278,7 @@ async def upload_file(file: UploadFile = File(...)):
             session = get_new_session()
             try:
                 for item in transactions.root:
+
                     cat_id = None
                     t_id = None
                     if item.category is not None:
@@ -288,9 +290,9 @@ async def upload_file(file: UploadFile = File(...)):
                             session.flush()
                         cat_id = cat.id
                     if item.type is not None:
-                        t = session.query(TransactionType).filter(TransactionType.type == item.type).one_or_none
+                        t = session.query(TransactionType).filter(TransactionType.type == item.type).one_or_none()
                         if t is None:
-                            t = TransactionTypes(type=item.type, category_id=cat_id)
+                            t = TransactionType(type=item.type, category_id=cat_id)
                             session.add(t)
                             session.flush()
                         t_id = t.id
@@ -309,6 +311,7 @@ async def upload_file(file: UploadFile = File(...)):
                     session.add(transaction)
                     session.flush()
                 session.commit()
+
             except Exception as exc:
                 session.rollback()
                 print(exc)

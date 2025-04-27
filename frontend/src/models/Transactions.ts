@@ -12,14 +12,12 @@ export class Transactions extends CollectionModel<
   static calculateCumulatedAmount(
     transactions: { transaction: Transaction; index: number }[]
   ): number {
-    console.log("transactions");
-    console.log(transactions);
     const total = transactions.reduce(
       (sum, transactionObj) =>
         sum + Number(transactionObj.transaction.get("quantity")),
       0
     );
-    console.log(total);
+
     return Math.round((total + Number.EPSILON) * 100) / 100;
   }
 

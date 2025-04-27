@@ -110,7 +110,6 @@ export class EditTransaction extends View<Transaction, TransactionProp> {
     if (!!data.date == false) {
       data.date = this.model.get("date");
     }
-    console.log(data);
     if (!!data.date == false || !!data.quantity === false) {
       throw error;
     }
@@ -156,7 +155,6 @@ export class EditTransaction extends View<Transaction, TransactionProp> {
     delete formData["otherAccountName"];
 
     const attrs = this.validTransactionData(formData);
-    console.log(attrs);
     this.model.set(attrs);
     this.model.save(
       () => (window.location.href = `http://${window.location.host}`)

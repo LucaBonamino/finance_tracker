@@ -53,14 +53,12 @@ export class TableView extends CollectionView<Transaction, TransactionProp> {
     const aggregatedByType = Transactions.aggregateTransactionsByType(
       this.collection.models
     );
-    console.log(aggregatedByType);
     const amounts = Object.entries(aggregatedByType).map(
       ([transactionType, transactions]) => ({
         transactionType,
         quantity: Transactions.calculateCumulatedAmount(transactions),
       })
     );
-    console.log(amounts);
 
     // Extract labels and data arrays from amounts
     const labels = amounts.map((item) => item.transactionType);

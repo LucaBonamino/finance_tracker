@@ -2,5 +2,6 @@ setuptools
 fastapi[standard]
 pydantic
 sqlalchemy
+orjson
 
 psycopg2-binary

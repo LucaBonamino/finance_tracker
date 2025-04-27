@@ -105,7 +105,7 @@ export class AddTransaction extends SimpleView {
     return {
       "click:#save": this.onSave,
       "change:select[name='type']": this.onTypeChange,
-      "change:select[name='accountOwner']": this.onTypeChange,
+      "change:select[name='account_owner']": this.onTypeChange,
     };
   }
 
@@ -115,12 +115,14 @@ export class AddTransaction extends SimpleView {
     if (name === "type") {
       this.showOther = select.value === "other";
       if (this.showOther == true) {
+        this.currentSelection = select.value;
         this.render();
       }
     }
-    if (name === "accountOwner") {
+    if (name === "account_owner") {
       this.showOtherAccountOwner = select.value === "other";
       if (this.showOtherAccountOwner == true) {
+        this.currentSelectedAccount = select.value;
         this.render();
       }
     }
@@ -165,10 +167,20 @@ export class AddTransaction extends SimpleView {
       `${rootUrl}/transactions`
     );
 
+    if (formData["type"] === "other" && formData["otherType"]) {
+      formData["type"] = formData["otherType"];
+    }
+
+    if (formData["account_owner"] === "other" && formData["otherAccountName"]) {
+      formData["account_owner"] = formData["otherAccountName"];
+    }
+
+    // You can also delete 'otherType' if you want clean data:
+    delete formData["otherType"];
+    delete formData["otherAccountName"];
+
     try {
-      console.log(formData);
       const validData = this.validTransactionData(formData);
-      console.log(validData);
       const attributes = new Attributes<TransactionProp>(validData);
       const transaction = new Transaction(attributes, events, synchronization);
 
@@ -256,7 +268,7 @@ export class AddTransaction extends SimpleView {
                     ? `
               <div id="otherTypeContainer" style="margin-top:8px;">
                 <label>Specify other:</label>
-                  <input type="text" id="otherType" name="otherType" placeholder="Enter new account owner">
+                  <input type="text" id="otherType" name="otherAccountName" placeholder="Enter new account owner">
               </div>
               `
                     : ""
