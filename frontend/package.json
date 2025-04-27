@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:db": "ts-node src/server.ts",
-    "start:parcel": "parcel index.html --no-cache"
+    "start-parcel": "parcel index.html --no-cache"
   },
   "dependencies": {
     "@faker-js/faker": "^7.6.0",
@@ -17,7 +16,6 @@
     "cors": "^2.8.5",
     "datatables.net-bs5": "^2.0.0",
     "jquery": "^3.7.1",
-    "json-server": "^0.17.4",
     "parcel": "^2.11.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
