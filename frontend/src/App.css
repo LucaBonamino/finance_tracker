@@ -1,10 +1,5 @@
 body {
-    font-family: 'Courier New', monospace;
     background-color: #ECFFDC;
-}
-
-#dataTable {
-    text-align: center;
 }
 
 h1{
@@ -13,12 +8,12 @@ h1{
 
 .form-container {
     text-align: center;
-}
+  }
   
 label {
     display: inline-block;
 }
-  
+
 .show {
     background-color: #ECFFDC;
     padding: 10px 20px;

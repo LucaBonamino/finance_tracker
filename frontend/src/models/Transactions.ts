@@ -1,28 +1,10 @@
 import { CollectionModel } from "./CollectionModel";
-import { Events } from "./Events";
-import { Sync } from "./Sync";
-import { Transaction, TransactionProp } from "./Transaction";
-import { Attributes } from "./Attributes";
-import { rootUrl } from "../Config";
+import { Transaction, TransactionProp, TransactionType } from "./Transaction";
 
 export class Transactions extends CollectionModel<
   Transaction,
   TransactionProp
 > {
-  static buildTransactions(size: number): Transaction[] {
-    let dataSet: Transaction[] = [];
-    for (let i = 0; i < size; i++) {
-      dataSet.push(
-        new Transaction(
-          new Attributes<TransactionProp>(Transaction.generateTransaction(i)),
-          new Events(),
-          new Sync<TransactionProp>(rootUrl)
-        )
-      );
-    }
-    return dataSet;
-  }
-
   bindModel(data: Transaction[]): void {
     this.models = data;
   }
@@ -31,9 +13,11 @@ export class Transactions extends CollectionModel<
     transactions: { transaction: Transaction; index: number }[]
   ): number {
     const total = transactions.reduce(
-      (sum, transactionObj) => sum + transactionObj.transaction.get("amount"),
+      (sum, transactionObj) =>
+        sum + Number(transactionObj.transaction.get("quantity")),
       0
     );
+
     return Math.round((total + Number.EPSILON) * 100) / 100;
   }
 
@@ -56,7 +40,29 @@ export class Transactions extends CollectionModel<
     return aggregatedData;
   }
 
-  static formatDate(monthYearString) {
+  static aggregateTransactionsByType(collection: Transaction[]) {
+    const aggregatedData: {
+      [transactionType: string]: {
+        transaction: Transaction;
+        index: number;
+      }[];
+    } = {};
+    collection.forEach((model, index) => {
+      //const transactionType = model.get("type");
+      const transactionType: string = model.get("category") ?? "Unknown";
+      if (!aggregatedData[transactionType]) {
+        aggregatedData[transactionType] = [];
+      }
+      // const transactions = { transactions: model, index: index };
+      aggregatedData[transactionType].push({
+        transaction: model,
+        index: index,
+      });
+    });
+    return aggregatedData;
+  }
+
+  static formatDate(monthYearString: string) {
     const [year, month] = monthYearString.split("-");
     const monthNames = [
       "January",

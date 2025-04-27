@@ -5,13 +5,22 @@ import { Events } from "./Events";
 import { Sync } from "./Sync";
 import { rootUrl } from "../Config";
 
+export enum TransactionType {
+  FIXED_EXPENSES = "fixed_expenses",
+  LOISIRS = "loisirs",
+  CAR = "car",
+  SPESA = "spesa",
+}
+
 export interface TransactionProp {
   id?: number;
   date: string;
-  amount: number;
+  quantity: number;
   comment: string;
-  user: string;
+  account_owner: string;
   data?: string;
+  type?: string;
+  category?: string;
 }
 
 const people: Array<string> = ["Luca", "Chiara", "Both"];
@@ -28,21 +37,6 @@ export class Transaction extends Model<TransactionProp> {
       new Events(),
       new Sync<TransactionProp>(`${rootUrl}/transactions`)
     );
-  }
-
-  static generateTransaction(id: number | undefined): TransactionProp {
-    return {
-      id: id,
-      date: "223-01-01",
-      amount: faker.datatype.float({
-        min: 10,
-        max: 100,
-        precision: 0.001,
-      }),
-      comment: faker.random.words(),
-      user: Transaction.getRandomElement(people),
-      data: "action",
-    };
   }
 
   static generateData(size: number) {

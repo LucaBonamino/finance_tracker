@@ -1,0 +1,140 @@
+[
+  {
+    "quantity": "10.0",
+    "date": "2025-01-01",
+    "account_owner": "User1"
+  },
+  {
+    "quantity": "10.0",
+    "date": "2025-01-01",
+    "type": "parking",
+    "category": "variable-expenses",
+    "account_owner": "User1"
+  },
+  {
+    "quantity": "10.0",
+    "date": "2025-01-01",
+    "type": "car",
+    "category": "fixed-expenses",
+    "account_owner": "User2"
+  },
+  {
+    "quantity": "53.27",
+    "date": "2025-01-30",
+    "type": "gym",
+    "category": "fixed-expenses",
+    "account_owner": "User5"
+  },
+  {
+    "quantity": "156.43",
+    "date": "2025-03-12",
+    "type": "restaurant",
+    "category": "variable-expenses",
+    "account_owner": "User3"
+  },
+  {
+    "quantity": "8.29",
+    "date": "2025-01-18",
+    "type": "fuel",
+    "category": "variable-expenses",
+    "account_owner": "User1"
+  },
+  {
+    "quantity": "49.65",
+    "date": "2025-02-03",
+    "type": "groceries",
+    "category": "variable-expenses",
+    "account_owner": "User4"
+  },
+  {
+    "quantity": "132.7",
+    "date": "2025-02-25",
+    "type": "rent",
+    "category": "fixed-expenses",
+    "account_owner": "User2"
+  },
+  {
+    "quantity": "91.46",
+    "date": "2025-01-23",
+    "type": "subscription",
+    "category": "fixed-expenses",
+    "account_owner": "User3"
+  },
+  {
+    "quantity": "15.11",
+    "date": "2025-04-05",
+    "type": "parking",
+    "category": "variable-expenses",
+    "account_owner": "User2"
+  },
+  {
+    "quantity": "189.35",
+    "date": "2025-02-28",
+    "type": "insurance",
+    "category": "fixed-expenses",
+    "account_owner": "User5"
+  },
+  {
+    "quantity": "61.92",
+    "date": "2025-03-01",
+    "type": "internet",
+    "category": "fixed-expenses",
+    "account_owner": "User1"
+  },
+  {
+    "quantity": "66.76",
+    "date": "2025-01-29",
+    "type": "fuel",
+    "category": "variable-expenses",
+    "account_owner": "User4"
+  },
+  {
+    "quantity": "124.4",
+    "date": "2025-03-23",
+    "type": "groceries",
+    "category": "variable-expenses",
+    "account_owner": "User3"
+  },
+  {
+    "quantity": "11.83",
+    "date": "2025-02-14",
+    "type": "gym",
+    "category": "fixed-expenses",
+    "account_owner": "User5"
+  },
+  {
+    "quantity": "36.99",
+    "date": "2025-03-03",
+    "type": "car",
+    "category": "fixed-expenses",
+    "account_owner": "User2"
+  },
+  {
+    "quantity": "14.17",
+    "date": "2025-01-04",
+    "type": "parking",
+    "category": "variable-expenses",
+    "account_owner": "User1"
+  },
+  {
+    "quantity": "45.05",
+    "date": "2025-02-09",
+    "type": "restaurant",
+    "category": "variable-expenses",
+    "account_owner": "User3"
+  },
+  {
+    "quantity": "172.88",
+    "date": "2025-04-15",
+    "type": "insurance",
+    "category": "fixed-expenses",
+    "account_owner": "User5"
+  },
+  {
+    "quantity": "58.23",
+    "date": "2025-02-21",
+    "type": "subscription",
+    "category": "fixed-expenses",
+    "account_owner": "User4"
+  }
+]
