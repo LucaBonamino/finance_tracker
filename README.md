@@ -12,6 +12,15 @@ Ideal to be used in a local network in the family. No log in is needed.
 4. Insert new transactions and update existing transactions.
 5. Insert transaction by importing json files.
 
+## Future Features
+- **User Authentication**: Add login/signup
+- **End-to-End Encryption**: 
+  - All transaction data (amounts, dates, categories, types, notes) is encrypted in the browser before it’s sent to the server.
+  - The server stores only ciphertext and necessary metadata (e.g. IVs, blind‐index tags) and never has access to decryption keys.
+  - Each user’s keys are isolated and managed so that only they can decrypt their own records.
+  - Privacy-preserving queries (e.g. category/type filters) use encrypted indexes so raw values are never exposed to the backend.
+- **Enhanced Search & Filtering**: Implement privacy-preserving search (blind-index) for encrypted fields.
+
 ## Setup
 
 Install the packages by
