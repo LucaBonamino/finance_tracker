@@ -9,6 +9,7 @@ from fin_pool.entities import Transaction, Transactions
 from fin_pool.database.models import Transaction as DBTransaction, Account, TransactionCategory, TransactionType
 
 
+
 # TODO: Attach session to DBEngine
 
 class AppService:
@@ -68,41 +69,45 @@ class AppService:
         raise Exception('Not Implemented yet')
 
     @staticmethod
-    def insert_transactions(transactions: Transactions) -> None:
+    def insert_transaction(session, /, transaction_model):
+        cat_id = None
+        t_id = None
+        if transaction_model.category is not None:
+            cat = session.query(TransactionCategory).filter(
+                TransactionCategory.category == transaction_model.category).one_or_none()
+            if cat is None:
+                cat = TransactionCategory(category=transaction_model.category)
+                session.add(cat)
+                session.flush()
+            cat_id = cat.id
+        if transaction_model.type is not None:
+            t = session.query(TransactionType).filter(TransactionType.type == transaction_model.type).one_or_none()
+            if t is None:
+                t = TransactionType(type=transaction_model.type, category_id=cat_id)
+                session.add(t)
+                session.flush()
+            t_id = t.id
+        account = session.query(Account).filter(Account.account_owner == transaction_model.account_owner).one_or_none()
+        if account is None:
+            account = Account(account_owner=transaction_model.account_owner)
+            session.add(account)
+            session.flush()
+        account_id = account.id
+        transaction_object = DBTransaction(
+            quantity=transaction_model.quantity,
+            date=transaction_model.date,
+            account_id=account_id,
+            transaction_type_id=t_id
+        )
+        session.add(transaction_object)
+        session.flush()
+
+    @classmethod
+    def insert_transactions(cls, transactions: Transactions) -> None:
         session = get_new_session()
         try:
             for item in transactions.root:
-                cat_id = None
-                t_id = None
-                if item.category is not None:
-                    cat = session.query(TransactionCategory).filter(
-                        TransactionCategory.category == item.category).one_or_none()
-                    if cat is None:
-                        cat = TransactionCategory(category=item.category)
-                        session.add(cat)
-                        session.flush()
-                    cat_id = cat.id
-                if item.type is not None:
-                    t = session.query(TransactionType).filter(TransactionType.type == item.type).one_or_none()
-                    if t is None:
-                        t = TransactionType(type=item.type, category_id=cat_id)
-                        session.add(t)
-                        session.flush()
-                    t_id = t.id
-                account = session.query(Account).filter(Account.account_owner == item.account_owner).one_or_none()
-                if account is None:
-                    account = Account(account_owner=item.account_owner)
-                    session.add(account)
-                    session.flush()
-                account_id = account.id
-                transaction = DBTransaction(
-                    quantity=item.quantity,
-                    date=item.date,
-                    account_id=account_id,
-                    transaction_type_id=t_id
-                )
-                session.add(transaction)
-                session.flush()
+                cls.insert_transaction(session, item)
             session.commit()
 
         except Exception as exc:
