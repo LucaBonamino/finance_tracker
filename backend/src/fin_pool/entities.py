@@ -3,7 +3,7 @@ from decimal import Decimal
 from typing import List, TypeVar, Generic, Optional
 
 import pydantic
-from pydantic import BaseModel, RootModel
+from pydantic import RootModel
 
 
 class TransactionType(pydantic.BaseModel):
@@ -36,7 +36,7 @@ class AccountOwners(RootModel[List[AccountOwner]]):
 T = TypeVar("T", int, None)
 
 
-class Transaction(BaseModel, Generic[T]):
+class Transaction(pydantic.BaseModel, Generic[T]):
     id: T = None
     quantity: Decimal
     date: datetime.date

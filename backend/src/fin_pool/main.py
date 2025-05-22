@@ -1,9 +1,7 @@
 import csv
 import datetime
 from pathlib import Path
-from typing import Optional
 
-import orjson
 import pydantic
 from fastapi import FastAPI, UploadFile, File, HTTPException, Body
 from sqlalchemy import and_
@@ -17,7 +15,6 @@ from fin_pool.entities import Transactions, Transaction, Token, LogInRequest, Tr
 from fin_pool.service import AppService
 
 app = FastAPI()
-
 
 origins = [
     "http://localhost:1234",
@@ -110,6 +107,7 @@ def add_transaction(request_model: Transaction = Body(...)):
     finally:
         session.close()
 
+
 @app.delete("/transactions/{transaction_id}", status_code=204)
 def delete_transaction(transaction_id: int):
     session = get_new_session()
@@ -125,6 +123,7 @@ def delete_transaction(transaction_id: int):
         raise exc
     finally:
         session.close()
+
 
 @app.put("/transactions/{transaction_id}", status_code=204)
 def update_transaction(transaction_id: int, request_model: Transaction = Body(...)):
@@ -262,61 +261,16 @@ def get_account_owners():
             {"id": item.id, "account_owner": item.account_owner} for item in account_owners
         ])
 
-# TODO: Generalize file upload to CSV and Excel files
+
+# TODO: Generalize file upload Excel files
 @app.post("/upload", status_code=201)
 async def upload_file(file: UploadFile = File(...)):
-
     file_name = Path(file.filename)
-    ext = file_name.suffix.split('.')[1]
-
     contents = await file.read()
     await file.close()
-    if ext == 'json':
-        raw = orjson.loads(contents)
-        try:
-            transactions = Transactions[Optional[int]].model_validate(raw)
-            session = get_new_session()
-            try:
-                for item in transactions.root:
+    try:
+        transactions = AppService.get_file_content(content=contents, filename=file_name)
+    except pydantic.ValidationError as e:
+        raise HTTPException(400, detail=e.errors())
 
-                    cat_id = None
-                    t_id = None
-                    if item.category is not None:
-                        cat = session.query(TransactionCategory).filter(
-                            TransactionCategory.category == item.category).one_or_none()
-                        if cat is None:
-                            cat = TransactionCategory(category=item.category)
-                            session.add(cat)
-                            session.flush()
-                        cat_id = cat.id
-                    if item.type is not None:
-                        t = session.query(TransactionType).filter(TransactionType.type == item.type).one_or_none()
-                        if t is None:
-                            t = TransactionType(type=item.type, category_id=cat_id)
-                            session.add(t)
-                            session.flush()
-                        t_id = t.id
-                    account = session.query(Account).filter(Account.account_owner == item.account_owner).one_or_none()
-                    if account is None:
-                        account = Account(account_owner=item.account_owner)
-                        session.add(account)
-                        session.flush()
-                    account_id = account.id
-                    transaction = DBTransaction(
-                        quantity=item.quantity,
-                        date=item.date,
-                        account_id=account_id,
-                        transaction_type_id=t_id
-                    )
-                    session.add(transaction)
-                    session.flush()
-                session.commit()
-
-            except Exception as exc:
-                session.rollback()
-                print(exc)
-            finally:
-                session.close()
-
-        except pydantic.ValidationError as e:
-            raise HTTPException(400, detail=e.errors())
+    AppService.insert_transactions(transactions)
