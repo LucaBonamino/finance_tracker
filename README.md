@@ -31,8 +31,10 @@ Install the packages by
 
 ### Back end
 Start PostgresQL DB
-<code>cd backend</code>
-<code>docker-compose up postgres</code>
+```bash
+cd backend
+docker compose up postgres
+```
 
 Start Fast api
 ```shell
