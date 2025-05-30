@@ -3,6 +3,20 @@ import { CollectionView } from "./CollectionView";
 import { Transactions } from "../models/Transactions";
 import * as $ from "jquery";
 import Chart from "chart.js/auto";
+import { NavigationHeader, NavigationLink } from "./NavigationHeader";
+
+const aggregatedLinks = [
+  {
+    href: "/add",
+    label: "Add Transaction",
+    className: "btn btn-outline-success",
+  },
+  {
+    href: "/",
+    label: "Back to Transaction list",
+    className: "btn btn-outline-primary",
+  },
+] as const;
 
 export class AggragatedTransactions extends CollectionView<
   Transaction,
@@ -74,6 +88,7 @@ export class AggragatedTransactions extends CollectionView<
     const cummulatedAmounts = Transactions.aggragateTransactionObj(
       this.collection.models
     );
+    const header = new NavigationHeader(aggregatedLinks).getNavigationHeader();
     return `
       <h1>Aggregated View</h1>
       
@@ -86,15 +101,7 @@ export class AggragatedTransactions extends CollectionView<
           <canvas id="summaryChartYear"></canvas>
         </div>
       </div>
-      
-      <div>
-        <a href="/add">
-          <button id="save" class="btn btn-outline-success">Add Transaction</button>
-        </a>
-        <a href="/">
-          <button class="btn btn-outline-primary">Back to Transaction list</button>
-        </a>
-      </div>
+      ${header}
       <br/>
       <div>
         ${Object.entries(cummulatedAmounts)

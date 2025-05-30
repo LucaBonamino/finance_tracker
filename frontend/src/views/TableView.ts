@@ -1,16 +1,37 @@
 import { Transaction, TransactionProp } from "../models/Transaction";
 import { CollectionView } from "./CollectionView";
 import { Transactions } from "../models/Transactions";
+import { NavigationHeader } from "./NavigationHeader";
 import * as $ from "jquery";
 import Chart from "chart.js/auto";
+
+const aggregatedLinks = [
+  {
+    href: "/add",
+    label: "Add Transaction",
+    className: "btn btn-outline-success",
+  },
+  {
+    href: "/aggregated",
+    label: "Aggregated View",
+    className: "btn btn-outline-primary",
+  },
+] as const;
 
 export class TableView extends CollectionView<Transaction, TransactionProp> {
   eventMap(): { [key: string]: (event: Event | undefined) => void } {
     return {
       "click:.edit": this.onEdit,
       "click:.delete": this.onDelete,
+      "change:#fileInput": this.onFileChange,
     };
   }
+
+  onFileChange = (event?: Event) => {
+    const inp = event?.target as HTMLInputElement;
+    if (!inp.files?.length) return;
+    const file = inp.files[0];
+  };
 
   onDelete = (event: Event | undefined) => {
     if (event) {
@@ -125,12 +146,10 @@ export class TableView extends CollectionView<Transaction, TransactionProp> {
   }
 
   templete(): string {
+    const header = new NavigationHeader(aggregatedLinks).getNavigationHeader();
     return `
     <h1>All Transactions</h1>
-    <div>
-    <a href="/add"><button class="btn btn-outline-success">Add Transaction</button></a>
-    <a href="/aggregated"><button class="btn btn-outline-primary">Aggragated View</button></a>
-    </div>
+    ${header}
     </br>
     <table id="dataTable" class="table table-striped" style="width:100%;text-align:center;">
         <thead>
