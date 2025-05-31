@@ -19,19 +19,25 @@ const aggregatedLinks = [
 ] as const;
 
 export class TableView extends CollectionView<Transaction, TransactionProp> {
+  private showFileUpload = false;
+
+  toggleFileUpload = () => {
+    this.showFileUpload = !this.showFileUpload;
+    this.render();
+  };
+
+  private header = new NavigationHeader(aggregatedLinks, {
+    onImportClick: this.toggleFileUpload,
+  });
+
   eventMap(): { [key: string]: (event: Event | undefined) => void } {
     return {
       "click:.edit": this.onEdit,
       "click:.delete": this.onDelete,
-      "change:#fileInput": this.onFileChange,
+      "click:#importButton": this.header.handleImportClick,
+      "change:#fileInput": this.header.onFileChange,
     };
   }
-
-  onFileChange = (event?: Event) => {
-    const inp = event?.target as HTMLInputElement;
-    if (!inp.files?.length) return;
-    const file = inp.files[0];
-  };
 
   onDelete = (event: Event | undefined) => {
     if (event) {
@@ -146,7 +152,7 @@ export class TableView extends CollectionView<Transaction, TransactionProp> {
   }
 
   templete(): string {
-    const header = new NavigationHeader(aggregatedLinks).getNavigationHeader();
+    const header = this.header.getNavigationHeader(this.showFileUpload);
     return `
     <h1>All Transactions</h1>
     ${header}
