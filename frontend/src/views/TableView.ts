@@ -2,6 +2,8 @@ import { Transaction, TransactionProp } from "../models/Transaction";
 import { CollectionView } from "./CollectionView";
 import { Transactions } from "../models/Transactions";
 import { NavigationHeader } from "./NavigationHeader";
+import axios from "axios";
+import { rootUrl } from "../Config";
 import * as $ from "jquery";
 import Chart from "chart.js/auto";
 
@@ -20,6 +22,7 @@ const aggregatedLinks = [
 
 export class TableView extends CollectionView<Transaction, TransactionProp> {
   private showFileUpload = false;
+  private selectedFile = null;
 
   toggleFileUpload = () => {
     this.showFileUpload = !this.showFileUpload;
@@ -35,9 +38,42 @@ export class TableView extends CollectionView<Transaction, TransactionProp> {
       "click:.edit": this.onEdit,
       "click:.delete": this.onDelete,
       "click:#importButton": this.header.handleImportClick,
-      "change:#fileInput": this.header.onFileChange,
+      "change:#fileInput": this.onFileChange,
+      "click:.submitFile": this.submitFile,
     };
   }
+
+  onFileChange = (event) => {
+    const inputElem = event.target;
+    if (!inputElem.files || inputElem.files.length === 0) {
+      this.selectedFile = null;
+      console.log("No file selected");
+      return;
+    }
+
+    this.selectedFile = inputElem.files[0];
+    console.log("Selected file:", this.selectedFile);
+  };
+
+  submitFile = () => {
+    if (!this.selectedFile) {
+      alert("No file selected");
+      return;
+    }
+    const data = new FormData();
+    data.append("file", this.selectedFile);
+    let url = `${rootUrl}/upload`;
+    axios
+      .post(url, data)
+      .then((response) => {
+        console.log("Upload succeeded:", response.data);
+        this.showFileUpload = false;
+        this.render();
+      })
+      .catch((error) => {
+        alert(`Upload failed: ${error}`);
+      });
+  };
 
   onDelete = (event: Event | undefined) => {
     if (event) {

@@ -266,11 +266,12 @@ def get_account_owners():
 @app.post("/upload", status_code=201)
 async def upload_file(file: UploadFile = File(...)):
     file_name = Path(file.filename)
+    print(file_name)
     contents = await file.read()
     await file.close()
     try:
         transactions = AppService.get_file_content(content=contents, filename=file_name)
     except pydantic.ValidationError as e:
         raise HTTPException(400, detail=e.errors())
-
+    
     AppService.insert_transactions(transactions)
