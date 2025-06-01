@@ -62,6 +62,7 @@ class AppService:
     @classmethod
     def get_file_content(cls, filename, content) -> Transactions:
         ext = filename.suffix.split('.')[1]
+        print(ext)
         if ext == 'json':
             return cls.get_content_from_json(content)
         elif ext == 'csv':
@@ -109,7 +110,6 @@ class AppService:
             for item in transactions.root:
                 cls.insert_transaction(session, item)
             session.commit()
-
         except Exception as exc:
             session.rollback()
             print(exc)
